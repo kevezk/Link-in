@@ -1,0 +1,14 @@
+{
+  "name": "link-in-master",
+  "version": "1.0.0",
+  "description": "Link-In Master Application & Online Server",
+  "main": "Link-In-온라인 시스템/server.js",
+  "scripts": {
+    "start": "node \"Link-In-온라인 시스템/server.js\""
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "web-push": "3.6.7"
+  }
+}
