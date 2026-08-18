@@ -8,9 +8,29 @@ document.addEventListener('DOMContentLoaded', () => {
     : 'https://port-0-link-in-msyht1rod1f2a852.sel3.cloudtype.app';
   const socket = io(socketServerUrl, {
     autoConnect: false,
-    transports: ['websocket', 'polling']
+    transports: ['websocket', 'polling'],
+    timeout: 45000,
+    reconnection: true,
+    reconnectionAttempts: 15,
+    reconnectionDelay: 2000
+  });
+
+  socket.on('connect_error', (error) => {
+    console.warn('[소켓 서버 대기 중]', error?.message || error);
+    const statusText = document.getElementById('currentRoomCodeText');
+    if (statusText) {
+      statusText.textContent = '⚡ 클라우드 서버 깨우는 중... (약 10~15초 소요)';
+    }
+  });
+
+  socket.on('connect', () => {
+    const statusText = document.getElementById('currentRoomCodeText');
+    if (statusText && currentRoomId) {
+      statusText.textContent = `서버 방 코드: ${currentRoomId} (🟢 연결 완료)`;
+    }
   });
   let pendingJoin = null;
+
 
 
 
