@@ -3,8 +3,12 @@
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const socket = io({ autoConnect: false });
+  const socketServerUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? undefined
+    : 'https://port-0-link-in-msyht1rod1f2a852.sel3.cloudtype.app';
+  const socket = io(socketServerUrl, { autoConnect: false });
   let pendingJoin = null;
+
 
   // App State
   let currentUser = null;
