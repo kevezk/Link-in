@@ -1,0 +1,526 @@
+/* ==========================================================================
+   Category Tabs & 3D Closet Gacha Animation CSS
+   ========================================================================== */
+
+:root {
+  --bg-app: #0f172a;
+  --bg-card: #1e293b;
+  --bg-modal: #0f172a;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border-color: #334155;
+  --primary-color: #3b82f6;
+  --accent-yellow: #f59e0b;
+  --accent-purple: #8b5cf6;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px 10px;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.app-header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.app-header p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* 1. 지갑 및 뽑기 버튼 영역 */
+.wallet-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0f172a;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 16px;
+}
+
+.wallet-info {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.wallet-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-primary:active {
+  transform: scale(0.96);
+}
+
+.btn-icon {
+  background: #334155;
+  color: #f8fafc;
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   2. 카테고리 탭 (Closet Category Tabs)
+   ========================================================================== */
+.closet-category-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 8px 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+  scrollbar-width: none; /* Firefox */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  touch-action: pan-x pan-y;
+}
+
+.closet-category-tabs::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+.closet-tab {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: #0f172a;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.closet-tab.active {
+  background: #3b82f6;
+  color: #ffffff;
+  border-color: #60a5fa;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* 3. 아이템 그리드 */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  min-height: 200px;
+}
+
+.item-card {
+  background: #0f172a;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.item-card:hover {
+  border-color: #475569;
+  transform: translateY(-2px);
+}
+
+.item-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.item-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.item-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.tag-legendary { color: #f59e0b; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); }
+.tag-epic { color: #a855f7; background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); }
+.tag-rare { color: #3b82f6; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); }
+.tag-common { color: #94a3b8; background: rgba(148, 163, 184, 0.15); border: 1px solid rgba(148, 163, 184, 0.3); }
+
+/* ==========================================================================
+   4. 3D 옷장 문 뽑기 애니메이션 (GACHA MODAL)
+   ========================================================================== */
+.gacha-modal, .prob-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.88);
+  z-index: 10000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.gacha-modal.show, .prob-modal.show {
+  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gacha-container {
+  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 3D 옷장 Wrapping Container */
+.closet-gacha-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  perspective: 900px;
+  width: 170px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 옷장 오라 (등급별 오라 가공) */
+.closet-aura {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  filter: blur(25px);
+  opacity: 0;
+  transition: background 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+  z-index: 1;
+}
+
+.closet-aura.step-common {
+  opacity: 0.35;
+  background: rgba(148, 163, 184, 0.3);
+  filter: blur(18px);
+}
+
+.closet-aura.step-rare {
+  opacity: 0.45;
+  background: rgba(59, 130, 246, 0.5);
+  filter: blur(22px);
+}
+
+.closet-aura.step-epic {
+  opacity: 0.55;
+  background: rgba(168, 85, 247, 0.55);
+  filter: blur(25px);
+}
+
+.closet-aura.step-legendary {
+  opacity: 0.7;
+  background: rgba(245, 158, 11, 0.6);
+  filter: blur(30px);
+}
+
+/* 옷장 본체 */
+.closet-wardrobe {
+  position: relative;
+  width: 160px;
+  height: 240px;
+  background: #1e293b;
+  border: 4px solid #334155;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  overflow: visible;
+  transform-style: preserve-3d;
+  transition: opacity 0.4s ease;
+}
+
+/* 임팩트 진동 애니메이션 */
+.closet-wardrobe.grade-bump {
+  animation: gradeBump 0.35s ease-out;
+}
+
+@keyframes gradeBump {
+  0% { transform: scale(1) rotate(0deg); }
+  35% { transform: scale(1.05) rotate(-4deg); }
+  70% { transform: scale(1.05) rotate(4deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* 3D 옷장 문 (좌/우) */
+.wardrobe-door {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(135deg, #334155, #1e293b);
+  border: 2px solid #475569;
+  box-sizing: border-box;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  backface-visibility: hidden;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+}
+
+.door-left {
+  left: 0;
+  border-radius: 12px 0 0 12px;
+  transform-origin: left center;
+  justify-content: flex-end;
+  padding-right: 6px;
+}
+
+.door-right {
+  right: 0;
+  border-radius: 0 12px 12px 0;
+  transform-origin: right center;
+  justify-content: flex-start;
+  padding-left: 6px;
+}
+
+.door-handle {
+  width: 8px;
+  height: 36px;
+  background: #94a3b8;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* 문 열림 상태 */
+.closet-wardrobe.open .door-left {
+  transform: rotateY(-115deg);
+}
+
+.closet-wardrobe.open .door-right {
+  transform: rotateY(115deg);
+}
+
+.wardrobe-interior {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle, #334155 0%, #0f172a 100%);
+  border-radius: 12px;
+  z-index: 1;
+}
+
+/* 섬광 빛 효과 */
+.gacha-light {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  opacity: 0;
+  z-index: -1;
+  box-shadow: 0 0 100px 50px currentColor;
+}
+
+.gacha-light.glowing-burst {
+  animation: lightBurst 1.5s forwards;
+}
+
+@keyframes lightBurst {
+  0% { width: 0; height: 0; opacity: 0; }
+  50% { width: 240px; height: 240px; opacity: 1; }
+  100% { width: 480px; height: 480px; opacity: 0; }
+}
+
+/* 뽑기 결과 모달 카트 */
+.gacha-result {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) translateY(30px);
+  opacity: 0;
+  pointer-events: none;
+  width: 85%;
+  max-width: 280px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  padding: 24px 20px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gacha-result.float-up {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) translateY(0);
+}
+
+.gacha-item-icon {
+  font-size: 64px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.gacha-item-name {
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.gacha-item-desc {
+  color: #475569;
+  font-size: 13px;
+  margin-bottom: 20px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.gacha-btn-group {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.gacha-close-btn {
+  background: #3b82f6;
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.gacha-close-btn:hover {
+  background: #2563eb;
+}
+
+.gacha-equip-btn {
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   5. 확률 모달
+   ========================================================================== */
+.prob-dialog {
+  background: #1e293b;
+  border-radius: 20px;
+  padding: 24px;
+  width: 90%;
+  max-width: 360px;
+  position: relative;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.prob-dialog h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.prob-close-btn {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.prob-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.prob-table th, .prob-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.prob-table th {
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-align: left;
+}

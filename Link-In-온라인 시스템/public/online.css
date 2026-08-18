@@ -1,0 +1,875 @@
+/* ============================================================
+   Link-In Online System - CSS Stylesheet
+   Design: Yeolpumta (열품타) Style School Server System
+   ============================================================ */
+
+#tab-classroom,
+.modal-overlay,
+.notice-overlay,
+.settings-overlay {
+  --bg-dark: #090D16;
+  --bg-card: rgba(18, 26, 43, 0.85);
+  --bg-card-hover: rgba(28, 40, 66, 0.95);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-glow: rgba(99, 102, 241, 0.4);
+  
+  --primary: #6366F1;
+  --primary-hover: #4F46E5;
+  --accent-cyan: #06B6D4;
+  --accent-gold: #F59E0B;
+  --accent-green: #10B981;
+  
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+
+  --role-teacher: #EC4899;
+  --role-president: #F59E0B;
+  --role-student: #3B82F6;
+
+  --font-main: 'Noto Sans KR', 'Outfit', sans-serif;
+
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.6);
+  --shadow-neon: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', 'Outfit', sans-serif;
+  user-select: none;
+}
+
+#tab-classroom.theme-dark,
+body.theme-dark #tab-classroom {
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================================================
+   MODALS & OVERLAYS
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 7, 15, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg), var(--shadow-neon);
+  width: 100%;
+  max-width: 620px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-card {
+  max-width: 580px;
+}
+
+.modal-header-graphic {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(6, 182, 212, 0.2) 100%);
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.badge-tag {
+  display: inline-block;
+  background: rgba(99, 102, 241, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.6);
+  color: #A5B4FC;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.modal-header-graphic h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+}
+
+.modal-header-graphic p {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.login-form {
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-row {
+  display: flex;
+  gap: 14px;
+}
+
+.flex-1 { flex: 1; }
+.flex-2 { flex: 2; }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #CBD5E1;
+}
+
+#tab-classroom input[type="text"],
+#tab-classroom select,
+#tab-classroom textarea,
+.modal-overlay input[type="text"],
+.modal-overlay select,
+.modal-overlay textarea {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+#tab-classroom input[type="text"]:focus,
+#tab-classroom select:focus,
+#tab-classroom textarea:focus,
+.modal-overlay input[type="text"]:focus,
+.modal-overlay select:focus,
+.modal-overlay textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Role Selector Radios */
+.role-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.role-option {
+  flex: 1;
+  cursor: pointer;
+}
+
+.role-option input {
+  display: none;
+}
+
+.role-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 6px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.role-option input:checked + .role-box {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: var(--primary);
+  color: #FFFFFF;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+/* Character Preview Space */
+.character-preview-section {
+  background: rgba(10, 15, 26, 0.6);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.character-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.character-choice {
+  --character-color: var(--primary);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.character-choice:hover {
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateY(-2px);
+}
+
+.character-choice:focus-visible {
+  outline: 2px solid var(--character-color);
+  outline-offset: 2px;
+}
+
+.character-choice img {
+  width: 100%;
+  max-width: 52px;
+  height: 52px;
+  object-fit: contain;
+  filter: grayscale(0.55) opacity(0.6);
+  transition: filter 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+
+.character-choice-name {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.character-choice.selected {
+  background: color-mix(in srgb, var(--character-color) 22%, transparent);
+  border-color: var(--character-color);
+}
+
+.character-choice.selected img {
+  filter: none;
+  transform: scale(1.08);
+}
+
+.character-choice.selected .character-choice-name {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.character-choice-caption {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  min-height: 1.2em;
+}
+
+@media (max-width: 420px) {
+  .character-choice-grid { grid-template-columns: repeat(3, 1fr); }
+  .character-choice img { height: 60px; max-width: 60px; }
+}
+
+#tab-classroom input[type="color"],
+.modal-overlay input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: none;
+}
+
+#tab-classroom input[type="color"]::-webkit-color-swatch-wrapper,
+.modal-overlay input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+#tab-classroom input[type="color"]::-webkit-color-swatch,
+.modal-overlay input[type="color"]::-webkit-color-swatch { border: 2px solid var(--border-glass); border-radius: 50%; }
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  border: none;
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 13px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.danger-btn {
+  color: #F87171;
+  border-color: rgba(248, 113, 113, 0.3);
+}
+
+.danger-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* ============================================================
+   MAIN DASHBOARD & HEADER
+   ============================================================ */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.top-header {
+  height: 64px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 100;
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: #FFFFFF;
+}
+
+.class-room-badge {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(6, 182, 212, 0.2) 100%);
+  border: 1px solid var(--border-glow);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #E0E7FF;
+}
+
+/* Notice Button & Badge */
+.header-action-btn {
+  position: relative;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 12px;
+  color: #FCD34D;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.header-action-btn:hover {
+  background: rgba(245, 158, 11, 0.28);
+  transform: translateY(-1px);
+}
+
+.notice-badge-dot {
+  width: 8px;
+  height: 8px;
+  background: #EF4444;
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  box-shadow: 0 0 8px #EF4444;
+}
+
+.icon-only-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-glass);
+  color: var(--text-main);
+  padding: 8px 12px;
+  font-size: 1.1rem;
+}
+
+.user-profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-glass);
+  padding: 4px 12px 4px 6px;
+  border-radius: 20px;
+}
+
+.user-role-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: var(--role-student);
+  color: #FFFFFF;
+}
+
+.user-role-badge.teacher { background: var(--role-teacher); }
+.user-role-badge.president { background: var(--role-president); }
+
+/* ============================================================
+   MAIN CONTENT & YEOLPUMTA (열품타) STYLE SCHOOL SERVER
+   ============================================================ */
+.main-content {
+  flex: 1;
+  position: relative;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.ypt-server-wrapper {
+  width: 100%;
+  max-width: 1080px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* School Server Banner */
+.ypt-server-banner {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.banner-info h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.banner-info p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.banner-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  color: #E0E7FF;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-green);
+  animation: pulseGlow 1.5s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Yeolpumta Style Character Grid */
+.ypt-character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 18px;
+  padding-bottom: 20px;
+}
+
+/* Yeolpumta User Card Cell */
+.ypt-user-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 18px;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.ypt-user-card:hover {
+  transform: translateY(-4px);
+  background: var(--bg-card-hover);
+  border-color: var(--border-glow);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5), var(--shadow-neon);
+}
+
+.ypt-user-card.is-me {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.ypt-character-space {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.ypt-character-space canvas {
+  border-radius: 50%;
+}
+
+.ypt-character-sprite {
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+}
+
+.me-indicator-tag {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--primary);
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.ypt-username-box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.role-icon-inline {
+  font-size: 0.85rem;
+}
+
+.username-text {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   NOTICE BOARD MODAL (알림장)
+   ============================================================ */
+.notice-card {
+  max-width: 650px;
+}
+
+.modal-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-title h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover { color: #FFFFFF; }
+
+.notice-body {
+  padding: 24px;
+}
+
+.notice-view-box {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.notice-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.notice-author-badge {
+  background: var(--role-teacher);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.notice-author-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #F8FAFC;
+}
+
+.notice-time {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.notice-display-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #FCD34D;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.notice-display-content {
+  font-size: 1rem;
+  color: #E2E8F0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.notice-editor-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.editor-header h4 {
+  color: #FCD34D;
+  font-size: 1.05rem;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modal-card-footer {
+  padding: 16px 24px;
+  background: rgba(10, 15, 26, 0.6);
+  border-top: 1px solid var(--border-glass);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.settings-card {
+  max-width: 580px;
+}
+
+.settings-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.setting-info h4 {
+  font-size: 1rem;
+  color: #FFFFFF;
+}
+
+.setting-info p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Bottom Status Bar */
+.bottom-bar {
+  height: 36px;
+  background: #070A12;
+  border-top: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.server-status { color: #34D399; }
+.divider { opacity: 0.3; }
+.live-classroom-grid { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr); gap:16px; margin-top:18px; }
+.pixel-panel,.video-panel { background:#0f172a; border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:14px; color:#fff; }
+#pixelClassroomCanvas { width:100%; height:auto; display:block; border-radius:12px; background:#c99a62; touch-action:none; }
+.pixel-dpad { display:grid; grid-template-columns:repeat(3,44px); justify-content:center; gap:5px; margin-top:10px; }
+.pixel-dpad button { min-height:40px; border:0; border-radius:10px; background:#334155; color:#fff; font-weight:800; }
+#pixelUp { grid-column:2; } #pixelLeft { grid-column:1; grid-row:2; } #pixelDown { grid-column:2; grid-row:2; } #pixelRight { grid-column:3; grid-row:2; }
+.video-panel-header { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.video-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:12px; }
+.video-tile { position:relative; overflow:hidden; min-height:120px; border-radius:12px; background:#020617; }
+.video-tile video { width:100%; height:100%; min-height:120px; object-fit:cover; }
+.video-label { position:absolute; left:8px; bottom:7px; padding:3px 7px; border-radius:999px; background:rgba(0,0,0,.65); font-size:11px; color:#fff; }
+.media-status { color:#94a3b8; font-size:12px; margin-top:10px; }
+@media (max-width:900px) { .live-classroom-grid { grid-template-columns:1fr; } }
+
+/* --- 역할 선택 (학생 / 선생님) --- */
+.role-choice-group {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.role-choice {
+  flex: 1;
+  padding: 9px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.role-choice:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.role-choice:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.role-choice.selected {
+  background: rgba(99, 102, 241, 0.28);
+  border-color: var(--primary);
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* 이미 역할이 확정된 사용자에게 보여주는 잠긴 배지 */
+.role-locked-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 9px 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.28);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #FFFFFF;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.role-locked-badge::after {
+  content: '🔒';
+  font-size: 0.75rem;
+}

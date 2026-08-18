@@ -1,0 +1,19 @@
+{
+  "name": "link-in-online-system",
+  "version": "1.0.0",
+  "description": "Link-In 학교-학년-반 자동 가입 실시간 화상 Grid & 픽셀 교실 온라인 시스템",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --env-file=.env server.js",
+    "dev": "nodemon --exec \"node --env-file=.env\" server.js",
+    "check": "node --check server.js && node --check public/app.js && node --check public/online.js && node --check public/pixelClassroom.js && node --check public/store.js && node --check public/ai.js && node --check public/avatar.js && node --check public/sw.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "web-push": "3.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

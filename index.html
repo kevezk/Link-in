@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link-In — 통합 시스템 (오늘의 갓생 & 실시간 학급 서버)</title>
+  <!-- PWA meta tags & manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#9fe870">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="LOCK-IN">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  
+  <!-- Google Fonts: Kadwa, Noto Sans KR, Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase CDN Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Socket.IO CDN Library (for Online Class Server) -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="runtime-config.js"></script>
+  
+  <link rel="stylesheet" href="style.css?v=27">
+</head>
+
+<body>
+
+  <!-- Phone Container / Main App Frame -->
+  <div class="phone-container">
+
+    <!-- Phone Top Status Bar -->
+    <div class="phone-header-bar">
+      <span class="phone-time" id="phoneTime">09:41</span>
+      <div class="dynamic-island"></div>
+      <div class="phone-icons">
+        <svg class="phone-icon" viewBox="0 0 17 11">
+          <rect x="0" y="8" width="2" height="3" rx="0.5" />
+          <rect x="4" y="6" width="2" height="5" rx="0.5" />
+          <rect x="8" y="4" width="2" height="7" rx="0.5" />
+          <rect x="12" y="1" width="2" height="10" rx="0.5" />
+        </svg>
+        <svg class="phone-icon" viewBox="0 0 17 11" style="width: 14px;">
+          <path d="M8.5,9 C7.8,9 7.2,9.3 6.8,9.7 L8.5,11.5 L10.2,9.7 C9.8,9.3 9.2,9 C8.5,9 Z M8.5,4 C6.7,4 5,4.7 3.8,5.9 L4.8,6.9 C5.7,6.1 7,5.6 8.5,5.6 C10,5.6 11.3,6.1 12.2,6.9 L13.2,5.9 C12,4.7 10.3,4 8.5,4 Z M8.5,0 C5.5,0 2.7,1.2 0.7,3.2 L1.7,4.2 C3.4,2.5 5.8,1.5 8.5,1.5 C11.2,1.5 13.6,2.5 15.3,4.2 L16.3,3.2 C14.3,1.2 11.5,0 8.5,0 Z" />
+        </svg>
+        <svg class="phone-icon" viewBox="0 0 17 11" style="width: 19px;">
+          <rect x="0" y="1.5" width="13" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1" />
+          <rect x="2" y="3.5" width="9" height="4" rx="1" />
+          <path d="M14,4.5 L14,6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Active Screen Area -->
+    <div class="app-screen">
+
+      <!-- Splash Screen -->
+      <div class="splash-screen" id="splashScreen">
+        <img src="cover_gatsaeng.webp" class="gatsaeng-sleep-img" alt="잠자는 새싹이">
+        <div class="splash-title-box">
+          <div class="splash-logo">LOCK-IN</div>
+          <div class="splash-subtitle">just 3 things a day, make your life better</div>
+        </div>
+      </div>
+
+      <!-- Date Navigator Header -->
+      <div class="date-navigator">
+        <button id="prevDateBtn" class="nav-date-btn" aria-label="이전 날짜"><i data-lucide="chevron-left"></i></button>
+        <div class="date-picker-wrapper">
+          <input type="date" id="datePicker" class="date-input" aria-label="조회 날짜">
+        </div>
+        <button id="nextDateBtn" class="nav-date-btn" aria-label="다음 날짜"><i data-lucide="chevron-right"></i></button>
+      </div>
+      <div class="date-mode-banner" id="dateModeBanner" aria-live="polite"></div>
+      <div class="sync-status" id="syncStatus" aria-live="polite">
+        <span class="sync-status-dot"></span>
+        <span id="syncStatusText">이 기기에 저장됨</span>
+      </div>
+
+      <!-- ==========================================================================
+           TAB 1: TODAY (오늘)
+           ========================================================================== -->
+      <div class="tab-content active" id="tab-today">
+        <div class="avatar-card-wrapper">
+          <div class="avatar-display-box" id="avatarBox"></div>
+          <div class="avatar-badge-title" id="equippedTitleText">초보 갓생러 🌱</div>
+          <div class="avatar-status-bar">
+            <span class="status-desc" id="statusMessage">오늘 첫 루틴을 실천하고 새싹이를 키워보세요!</span>
+            <div class="progress-track">
+              <div class="progress-bar-fill" id="growthProgressBar" style="width: 0%"></div>
+            </div>
+            <span class="growth-percent-text" id="growthPercent">성장률: 0%</span>
+          </div>
+        </div>
+
+        <div class="setting-accordion">
+          <button class="accordion-header" id="accordionToggleBtn">
+            <i data-lucide="settings"></i>
+            <span>Gemini Vision AI 설정</span>
+            <i data-lucide="chevron-down" class="arrow-icon" id="accordionArrow"></i>
+          </button>
+          <div class="accordion-content" id="accordionContent">
+            <p class="settings-desc">Google Gemini API 키를 저장하면 직접 찍은 사진으로 행동 맥락을 분석해 힙하게 판독합니다.</p>
+            <div class="input-row">
+              <input type="password" id="apiKeyInput" placeholder="Gemini API Key를 입력하세요">
+            </div>
+            <div class="btn-row">
+              <button class="btn-settings-action btn-save" id="saveApiKeyBtn">저장하기</button>
+              <button class="btn-settings-action btn-delete" id="deleteApiKeyBtn">삭제</button>
+            </div>
+            <div class="api-key-status-msg" id="apiKeyStatus"></div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          오늘의 3대 루틴 집중 <span id="routineProgressText">0 / 3 완료</span>
+        </div>
+        <div class="routine-list" id="routineList"></div>
+
+        <div class="routine-quick-add" id="routineQuickAddForm" style="display: none;">
+          <div class="quick-add-input-row">
+            <input type="text" id="quickAddInput" class="quick-add-input" placeholder="새 루틴을 적어주세요 (최대 3개 제한)" maxlength="25">
+            <button type="button" id="quickAddAlarmToggleBtn" class="clock-icon-btn" title="알람 설정" aria-label="알람 설정"><i data-lucide="clock"></i></button>
+            <button id="quickAddBtn" class="quick-add-btn" aria-label="루틴 추가"><i data-lucide="plus"></i></button>
+          </div>
+          <div class="alarm-picker-panel" id="quickAddAlarmPanel" hidden>
+            <div class="alarm-picker-header">
+              <span class="alarm-picker-title">🔔 알람 설정</span>
+              <label class="alarm-switch">
+                <input type="checkbox" id="quickAddAlarmToggle">
+                <span class="alarm-slider"></span>
+              </label>
+            </div>
+            <div class="alarm-picker-body" id="quickAddAlarmBody">
+              <div class="alarm-time-inputs">
+                <div class="meridiem-selector" id="quickAddAlarmMeridiem">
+                  <button type="button" class="meridiem-btn active" data-meridiem="AM">AM</button>
+                  <button type="button" class="meridiem-btn" data-meridiem="PM">PM</button>
+                </div>
+                <div class="time-select-group">
+                  <select id="quickAddAlarmHour" class="time-select" aria-label="시 선택"></select>
+                  <span class="time-colon">:</span>
+                  <select id="quickAddAlarmMinute" class="time-select" aria-label="분 선택"></select>
+                </div>
+              </div>
+              <div class="alarm-quick-mins">
+                <button type="button" class="quick-min-btn" data-quick-min="5">+5분</button>
+                <button type="button" class="quick-min-btn" data-quick-min="10">+10분</button>
+                <button type="button" class="quick-min-btn" data-preset-time="08:30">오전 8:30</button>
+                <button type="button" class="quick-min-btn" data-preset-time="14:30">오후 2:30</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="routine-template-section" id="routineTemplateSection" style="display: none;">
+          <button type="button" class="template-toggle-btn" id="templateToggleBtn">
+            <i data-lucide="lightbulb"></i>
+            루틴이 생각 안 나요
+          </button>
+          <div class="routine-template-panel" id="routineTemplatePanel" hidden>
+            <p>지금 할 수 있는 작은 루틴을 골라보세요.</p>
+            <div class="routine-template-grid">
+              <button type="button" data-routine-template="물 한 잔 마시기">💧 물 한 잔</button>
+              <button type="button" data-routine-template="이불 개기">🛏️ 이불 개기</button>
+              <button type="button" data-routine-template="3분 스트레칭">🤸 3분 스트레칭</button>
+              <button type="button" data-routine-template="책 5쪽 읽기">📚 책 5쪽</button>
+              <button type="button" data-routine-template="10분 산책하기">🚶 10분 산책</button>
+              <button type="button" data-routine-template="책상 위 한 곳 정리하기">✨ 한 곳 정리</button>
+            </div>
+            <div class="custom-routine-library">
+              <strong>나만의 장기 루틴</strong>
+              <div class="custom-routine-save-row">
+                <input type="text" id="customRoutineInput" maxlength="40" placeholder="계속 쓰고 싶은 루틴">
+                <button type="button" id="customRoutineAlarmBtn" class="clock-icon-btn" title="알람 설정" aria-label="알람 설정"><i data-lucide="clock"></i></button>
+                <button type="button" id="saveCustomRoutineBtn">저장</button>
+              </div>
+              <select id="customRoutineRepeat" class="custom-routine-repeat" aria-label="반복 일정">
+                <option value="none">필요할 때 선택</option>
+                <option value="daily">매일 추천</option>
+                <option value="weekdays">평일마다 추천</option>
+                <option value="weekends">주말마다 추천</option>
+                <option value="custom">요일 지정</option>
+              </select>
+              <div class="custom-weekday-picker" id="customWeekdayPicker" hidden>
+                <label><input type="checkbox" value="1"> 월</label>
+                <label><input type="checkbox" value="2"> 화</label>
+                <label><input type="checkbox" value="3"> 수</label>
+                <label><input type="checkbox" value="4"> 목</label>
+                <label><input type="checkbox" value="5"> 금</label>
+                <label><input type="checkbox" value="6"> 토</label>
+                <label><input type="checkbox" value="0"> 일</label>
+              </div>
+              <div class="alarm-picker-panel" id="customRoutineAlarmPanel" hidden>
+                <div class="alarm-picker-header">
+                  <span class="alarm-picker-title">🔔 루틴 알람 설정</span>
+                  <label class="alarm-switch">
+                    <input type="checkbox" id="customRoutineAlarmToggle">
+                    <span class="alarm-slider"></span>
+                  </label>
+                </div>
+                <div class="alarm-picker-body" id="customRoutineAlarmBody">
+                  <div class="alarm-time-inputs">
+                    <div class="meridiem-selector" id="customRoutineAlarmMeridiem">
+                      <button type="button" class="meridiem-btn active" data-meridiem="AM">AM</button>
+                      <button type="button" class="meridiem-btn" data-meridiem="PM">PM</button>
+                    </div>
+                    <div class="time-select-group">
+                      <select id="customRoutineAlarmHour" class="time-select" aria-label="시 선택"></select>
+                      <span class="time-colon">:</span>
+                      <select id="customRoutineAlarmMinute" class="time-select" aria-label="분 선택"></select>
+                    </div>
+                  </div>
+                  <div class="alarm-quick-mins">
+                    <button type="button" class="quick-min-btn" data-quick-min="5">+5분</button>
+                    <button type="button" class="quick-min-btn" data-quick-min="10">+10분</button>
+                    <button type="button" class="quick-min-btn" data-preset-time="08:30">오전 8:30</button>
+                    <button type="button" class="quick-min-btn" data-preset-time="14:30">오후 2:30</button>
+                  </div>
+                </div>
+              </div>
+              <div class="scheduled-routine-suggestions" id="scheduledRoutineSuggestions"></div>
+              <div class="custom-routine-list" id="customRoutineList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           TAB 2: HISTORY (과거 회상)
+           ========================================================================== -->
+      <div class="tab-content" id="tab-history">
+        <div class="history-card">
+          <div class="history-card-title">
+            <i data-lucide="bar-chart-3"></i>
+            지난 7일간의 갓생 기록
+          </div>
+          <div class="weekly-chart" id="weeklyChart"></div>
+        </div>
+
+        <div class="history-card">
+          <div class="history-card-title">
+            <i data-lucide="calendar-days"></i>
+            이달의 잔디 (최근 35일)
+          </div>
+          <div class="grass-grid" id="grassGrid"></div>
+          <button class="month-record-btn" id="monthRecordBtn">
+            <i data-lucide="clapperboard"></i>
+            한 달의 기록 (인증 1.5초 움짤 모아보기)
+          </button>
+        </div>
+
+        <div class="history-card archive-card">
+          <div class="history-card-title">
+            <i data-lucide="scroll-text"></i>
+            성취 보관함 (과거 완료 루틴)
+          </div>
+          <div class="archive-scroll-container" id="archiveScroll"></div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           TAB 3: SHOP & WARDROBE (상점 및 피팅룸)
+           ========================================================================== -->
+      <div class="tab-content" id="tab-shop">
+        <div class="shop-wallet">
+          <div class="wallet-left">
+            <span class="wallet-label">보유 갓생 코인</span>
+            <div class="wallet-coins"><i data-lucide="coins" style="color: var(--accent-yellow)"></i> <span id="coinCount">10</span> 🪙</div>
+          </div>
+          <div class="lucky-box-group">
+            <button class="lucky-box-help-btn" id="gachaHelpBtn" title="아이템 확률표 도움말" aria-label="아이템 확률표 도움말">
+              <i data-lucide="help-circle"></i>
+            </button>
+            <button class="lucky-box-btn" id="luckyBoxBtn">
+              <i data-lucide="box"></i> 럭키박스 (2코인)
+            </button>
+          </div>
+        </div>
+
+        <div class="shop-nav">
+          <button class="shop-nav-item active" data-subtab="market">코인 상점</button>
+          <button class="shop-nav-item" data-subtab="closet">내 옷장 (OOTD)</button>
+        </div>
+
+        <div class="closet-category-tabs" id="shopCategoryTabs">
+          <button class="closet-tab active" data-category="all">전체</button>
+          <button class="closet-tab" data-category="skin">스킨</button>
+          <button class="closet-tab" data-category="accessory">장신구</button>
+          <button class="closet-tab" data-category="background">배경</button>
+          <button class="closet-tab" data-category="title">칭호</button>
+        </div>
+
+        <div class="shop-subcontent-panel active" id="subtab-market">
+          <div class="shop-items-grid" id="marketGrid"></div>
+        </div>
+
+        <div class="shop-subcontent-panel" id="subtab-closet">
+          <div class="shop-items-grid" id="closetGrid"></div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           TAB 4: CLASSROOM SERVER (실시간 학급 서버 & 픽셀 교실)
+           ========================================================================== -->
+      <div class="tab-content" id="tab-classroom">
+        <div class="app-container" id="appContainer">
+          <!-- Top Header Bar -->
+          <header class="top-header">
+            <div class="header-left">
+              <div class="logo">
+                <span class="logo-icon">📡</span>
+                <span class="logo-text">Link-In</span>
+              </div>
+              <div class="class-room-badge" id="classRoomTitle">
+                🏫 학급 서버 정보 로딩 중...
+              </div>
+            </div>
+
+            <div class="header-right">
+              <button class="header-action-btn notice-btn" id="btnOpenNotice">
+                <span class="btn-icon">📌</span>
+                <span class="btn-text">알림장</span>
+                <span class="notice-badge-dot" id="noticeBadgeDot"></span>
+              </button>
+
+              <div class="user-profile-pill" id="userProfilePill">
+                <span class="user-role-badge" id="userRoleBadge">🎒 학생</span>
+                <span class="user-name" id="currentUserName">사용자</span>
+              </div>
+
+              <button class="header-action-btn icon-only-btn" id="btnOpenSettings" title="설정">
+                ⚙️
+              </button>
+            </div>
+          </header>
+
+          <!-- Main School Server Content View -->
+          <main class="main-content">
+            <div class="ypt-server-wrapper">
+              <div class="ypt-server-banner">
+                <div class="banner-info">
+                  <h2 id="yptServerTitle">🏫 학급 접속 필요</h2>
+                  <p>우리 반 멤버들의 캐릭터가 나열된 실시간 학급 서버입니다.</p>
+                </div>
+                <div class="banner-counter">
+                  <span class="pulse-dot"></span>
+                  <span>서버 멤버: <strong id="userCountText">0</strong>명</span>
+                </div>
+              </div>
+
+              <div class="ypt-character-grid" id="characterGrid">
+                <!-- Dynamically populated user cards -->
+              </div>
+            </div>
+          </main>
+
+          <footer class="bottom-bar-classroom">
+            <div class="status-left">
+              <span class="server-status">🟢 학급 서버 접속 상태</span>
+              <span class="divider">|</span>
+              <span id="currentRoomCodeText">서버 방 코드: 연결 준비 중</span>
+            </div>
+            <button class="btn-primary btn-sm" id="btnTriggerClassLogin" style="margin-left:auto;">🏫 학급 재입장</button>
+          </footer>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           TAB BAR NAVIGATION (통합 4개 탭 하단 바)
+           ========================================================================== -->
+      <div class="tab-bar">
+        <div class="tab-indicator" id="tabIndicator">
+          <div class="tab-indicator-pill"></div>
+        </div>
+        <button type="button" class="tab-item active" data-tab="today" aria-label="오늘 탭">
+          <i data-lucide="smile"></i>
+          <span>오늘</span>
+        </button>
+        <button type="button" class="tab-item" data-tab="history" aria-label="과거 기록 탭">
+          <i data-lucide="calendar"></i>
+          <span>과거</span>
+        </button>
+        <button type="button" class="tab-item" data-tab="shop" aria-label="상점 탭">
+          <i data-lucide="shopping-bag"></i>
+          <span>상점</span>
+        </button>
+        <button type="button" class="tab-item" data-tab="classroom" aria-label="학급 서버 탭">
+          <i data-lucide="users"></i>
+          <span>학급 서버</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 1: REALTIME CLASSROOM ENTRY MODAL (학급 서버 로그인 모달)
+         ========================================================================== -->
+    <div class="modal-overlay hidden" id="loginModal">
+      <div class="modal-card login-card">
+        <div class="modal-header-graphic">
+          <div class="badge-tag">Link-In Online Class</div>
+          <h2>🏫 학급 서버 자동 입장</h2>
+          <p>[학교 - 학년 - 반]을 입력하면 자동으로 해당 반 전용 서버로 연결됩니다.</p>
+        </div>
+
+        <form id="loginForm" class="login-form">
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label for="schoolInput">🏫 학교 이름</label>
+              <input type="text" id="schoolInput" placeholder="예: 서울초등학교" required value="한국초등학교">
+            </div>
+            <div class="form-group flex-1">
+              <label for="gradeInput">🎓 학년</label>
+              <select id="gradeInput" required>
+                <option value="1">1학년</option>
+                <option value="2">2학년</option>
+                <option value="3">3학년</option>
+                <option value="4">4학년</option>
+                <option value="5" selected>5학년</option>
+                <option value="6">6학년</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="classInput">🏷️ 반</label>
+              <select id="classInput" required>
+                <option value="1">1반</option>
+                <option value="2" selected>2반</option>
+                <option value="3">3반</option>
+                <option value="4">4반</option>
+                <option value="5">5반</option>
+                <option value="6">6반</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label for="usernameInput">👤 이름 / 닉네임</label>
+              <input type="text" id="usernameInput" placeholder="이름을 입력하세요" required value="김민준">
+            </div>
+            <div class="form-group flex-2">
+              <label>🔑 역할 (Role)</label>
+              <div class="role-selector">
+                <label class="role-option">
+                  <input type="radio" name="userRole" value="student" checked>
+                  <span class="role-box">🎒 학생</span>
+                </label>
+                <label class="role-option">
+                  <input type="radio" name="userRole" value="president">
+                  <span class="role-box">👑 반장</span>
+                </label>
+                <label class="role-option">
+                  <input type="radio" name="userRole" value="teacher">
+                  <span class="role-box">👩‍🏫 선생님</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="character-preview-section">
+            <label>🎨 캐릭터 테마 색상</label>
+            <div class="character-space-box">
+              <canvas id="previewAvatarCanvas" width="80" height="80"></canvas>
+              <div class="color-picker-simple">
+                <span>테마 색상:</span>
+                <input type="color" id="avatarColorInput" value="#4A90E2">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary btn-block">🚀 학급 서버 입장하기</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 2: NOTICE BOARD MODAL (우리반 알림장)
+         ========================================================================== -->
+    <div class="modal-overlay hidden" id="noticeModal">
+      <div class="modal-card notice-card">
+        <div class="modal-card-header">
+          <div class="modal-title">
+            <span class="title-icon">📌</span>
+            <h3>우리반 알림장</h3>
+          </div>
+          <button class="close-btn" id="btnCloseNotice">&times;</button>
+        </div>
+
+        <div class="notice-body">
+          <div class="notice-view-box" id="noticeViewBox">
+            <div class="notice-meta">
+              <span class="notice-author-badge" id="noticeAuthorRole">👩‍🏫 선생님</span>
+              <span class="notice-author-name" id="noticeAuthorName">김선생</span>
+              <span class="notice-time" id="noticeTime">10:00 AM</span>
+            </div>
+            <h2 class="notice-display-title" id="noticeDisplayTitle">알림장 제목</h2>
+            <div class="notice-display-content" id="noticeDisplayContent">
+              알림장 내용이 표시되는 공간입니다.
+            </div>
+          </div>
+
+          <div class="notice-editor-box hidden" id="noticeEditorBox">
+            <div class="editor-header">
+              <h4>✏️ 알림장 작성 / 수정 (선생님 & 반장 전용)</h4>
+            </div>
+            <form id="noticeForm">
+              <div class="form-group">
+                <label for="noticeTitleInput">제목</label>
+                <input type="text" id="noticeTitleInput" placeholder="알림장 제목을 입력하세요" required>
+              </div>
+              <div class="form-group">
+                <label for="noticeContentInput">내용</label>
+                <textarea id="noticeContentInput" rows="5" placeholder="오늘의 숙제, 준비물, 공지사항을 작성하세요..." required></textarea>
+              </div>
+              <div class="editor-actions">
+                <button type="button" class="btn-secondary" id="btnCancelEditNotice">취소</button>
+                <button type="submit" class="btn-primary">💾 알림장 등록/수정하기</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="modal-card-footer">
+          <button class="btn-secondary" id="btnToggleEditNotice">
+            ✏️ 알림장 수정하기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 3: SYSTEM SETTINGS MODAL (학급 설정)
+         ========================================================================== -->
+    <div class="modal-overlay hidden" id="settingsModal">
+      <div class="modal-card settings-card">
+        <div class="modal-card-header">
+          <div class="modal-title">
+            <span class="title-icon">⚙️</span>
+            <h3>학급 시스템 설정</h3>
+          </div>
+          <button class="close-btn" id="btnCloseSettings">&times;</button>
+        </div>
+
+        <div class="settings-body">
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>🏫 접속한 학급 정보</h4>
+              <p id="settingsRoomDetails">정보 로딩 중...</p>
+            </div>
+            <button class="btn-secondary danger-btn" id="btnRejoinClass">🔄 다른 학급으로 변경하기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 4: AUTH ACCOUNT MODAL (로그인 / 회원가입)
+         ========================================================================== -->
+    <div class="auth-modal" id="authModal" aria-hidden="true">
+      <div class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+        <button type="button" class="auth-close-btn" id="authCloseBtn" aria-label="로그인 창 닫기">×</button>
+        <div class="auth-brand-mark">🌱</div>
+        <h2 id="authModalTitle">LOCK-IN 계정</h2>
+        <div id="authSignedOutView">
+          <p class="auth-description">이메일과 비밀번호로 로그인하면 다른 기기에서도 기록을 이어갈 수 있어요.</p>
+          <label class="auth-field">
+            <span>이메일</span>
+            <input type="email" id="authEmailInput" autocomplete="email" placeholder="name@example.com">
+          </label>
+          <label class="auth-field">
+            <span>비밀번호</span>
+            <input type="password" id="authPasswordInput" autocomplete="current-password" minlength="6" placeholder="6자 이상 입력">
+          </label>
+          <button type="button" class="auth-primary-btn" id="localLoginBtn">로그인</button>
+          <button type="button" class="auth-secondary-btn" id="localSignupBtn">새 계정 만들기</button>
+          <div class="auth-divider"><span>또는</span></div>
+          <button type="button" class="auth-guest-btn" id="guestLoginBtn">게스트로 계속하기</button>
+          <p class="auth-guest-note">게스트 기록은 이 기기에만 저장됩니다.</p>
+        </div>
+        <div id="authSignedInView" hidden>
+          <p class="auth-account-label">현재 로그인한 계정</p>
+          <strong class="auth-account-email" id="authAccountEmail"></strong>
+          <p class="auth-description">이 계정의 루틴과 기록은 Supabase 클라우드에 동기화됩니다.</p>
+          <button type="button" class="auth-secondary-btn" id="importGuestDataBtn" hidden>이 기기의 게스트 기록 가져오기</button>
+          <button type="button" class="auth-logout-btn" id="logoutBtn">이 기기에서 로그아웃</button>
+        </div>
+        <p class="auth-status-message" id="authStatusMessage" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 5: BOOMERANG CAMERA MODAL (루틴 사진 인증)
+         ========================================================================== -->
+    <div class="cam-modal" id="cameraModal">
+      <div class="flash-effect" id="cameraFlash"></div>
+      <div class="cam-header">
+        <button class="cam-close" id="closeCamBtn" aria-label="카메라 닫기"><i data-lucide="x"></i></button>
+        <span class="cam-task-title" id="camTaskTitle">루틴 인증</span>
+        <button class="cam-switch" id="switchCamBtn" title="카메라 전환">
+          <i data-lucide="switch-camera"></i>
+        </button>
+      </div>
+
+      <div class="cam-viewfinder-wrap" id="viewfinder">
+        <video class="webcam-video" id="webcamVideo" autoplay playsinline muted></video>
+        <canvas class="boomerang-preview-canvas" id="boomerangCanvas"></canvas>
+
+        <div class="play-icon-overlay" id="playIcon">
+          <i data-lucide="refresh-cw" style="animation: spin 3s linear infinite;"></i>
+        </div>
+
+        <div class="simulated-cam-view" id="simulatedCam">
+          <svg viewBox="0 0 100 100" style="width: 140px; height: 140px;">
+            <defs>
+              <linearGradient id="potGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#EDE5DA" />
+                <stop offset="100%" stop-color="#D7CDBC" />
+              </linearGradient>
+              <linearGradient id="gatsaengPotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#C2B4A2" />
+                <stop offset="100%" stop-color="#9E8F7C" />
+              </linearGradient>
+            </defs>
+            <path d="M 20 55 C 20 40, 80 40, 80 55 C 80 75, 70 85, 50 85 C 30 85, 20 75, 20 55 Z" fill="url(#potGrad)" stroke="#BCAFA0" stroke-width="2.5" />
+            <ellipse cx="50" cy="50" rx="30" ry="8" fill="#DFD4C4" stroke="#BCAFA0" stroke-width="2" />
+            <path d="M 32 50 C 26 30, 74 30, 68 50 Z" fill="url(#gatsaengPotGrad)" stroke="#7C6F60" stroke-width="2" />
+            <g>
+              <path class="sprout-leaf-left" d="M 50 28 Q 45 10 35 8 Q 24 6 30 16 Q 38 20 50 28 Z" fill="#8BC34A" stroke="#558B2F" stroke-width="1.8" />
+              <path class="sprout-leaf-right" d="M 50 28 Q 55 10 65 8 Q 76 6 70 16 Q 62 20 50 28 Z" fill="#8BC34A" stroke="#558B2F" stroke-width="1.8" />
+              <path d="M 50 28 L 50 21" stroke="#558B2F" stroke-width="2.5" stroke-linecap="round" />
+            </g>
+            <circle cx="43" cy="42" r="2" fill="#4E443C" />
+            <circle cx="57" cy="42" r="2" fill="#4E443C" />
+            <circle cx="50" cy="46" r="1.5" fill="#4E443C" />
+          </svg>
+          <span id="simulatedCamText">이곳을 터치하는 순간을<br>1.5초 부메랑으로 모아보세요</span>
+        </div>
+
+        <div class="focus-overlay">
+          <div class="focus-corner fc-tl"></div>
+          <div class="focus-corner fc-tr"></div>
+          <div class="focus-corner fc-bl"></div>
+          <div class="focus-corner fc-br"></div>
+          <div class="focus-guide-text" id="focusGuide">부메랑 렌즈 안에 행동을 담아주세요</div>
+        </div>
+
+        <div class="analysis-loading-overlay" id="analysisLoading">
+          <div class="loading-spinner"></div>
+          <span>AI 분석관이 루틴을 판독하는 중... 🤖</span>
+        </div>
+
+        <div class="result-badge-overlay pass" id="passBadge">
+          <i data-lucide="check-circle-2"></i> PASS
+        </div>
+        <div class="result-badge-overlay retake" id="retakeBadge">
+          <i data-lucide="alert-triangle"></i> RETAKE
+        </div>
+      </div>
+
+      <div class="cam-footer" id="captureFooter">
+        <div class="shutter-btn-wrap" id="shutterBtn">
+          <div class="shutter-btn-inner"></div>
+          <svg class="progress-svg">
+            <circle class="progress-circle" id="progressCircle" cx="40" cy="40" r="38"></circle>
+          </svg>
+        </div>
+      </div>
+
+      <div class="result-panel" id="resultSuccessPanel">
+        <div class="result-comment-box">
+          <div class="score-badge success">AI 판독 점수: <span id="successScore">95</span>점</div>
+          <p id="successFeedback">"오늘도 이불 밖은 안전했습니다. 완벽한 성공!"</p>
+          <span>✨ 갓생력 +15% 상승 및 2코인 지급! ✨</span>
+        </div>
+        <div class="btn-group-vertical">
+          <button class="btn-action btn-primary" id="confirmSuccessBtn">달력에 반영하기</button>
+        </div>
+      </div>
+
+      <div class="result-panel" id="resultFailPanel">
+        <div class="result-comment-box">
+          <div class="score-badge fail">AI 판독 점수: <span id="failScore">45</span>점</div>
+          <p id="failFeedback">"초점이 흔들리거나 행동이 잡히지 않았습니다."</p>
+          <span>😢 다시 한번 시도해 볼까요? (통과 기준: 70점)</span>
+        </div>
+        <div class="btn-group-vertical">
+          <button class="btn-action btn-warning" id="retakePhotoBtn">다시 촬영하기</button>
+          <button class="btn-action btn-secondary" id="confirmFailureBtn">실패 확정하고 내일 성공!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 6: GACHA HELP PROBABILITY MODAL (확률 안내)
+         ========================================================================== -->
+    <div class="gacha-modal-overlay" id="gachaHelpModal" style="display: none;">
+      <div class="gacha-modal-card">
+        <div class="gacha-modal-header">
+          <div class="gacha-modal-title">
+            <i data-lucide="sparkles" style="color: var(--accent-yellow)"></i>
+            <span>럭키박스 아이템 확률표</span>
+          </div>
+          <button class="gacha-modal-close" id="gachaHelpCloseBtn" aria-label="닫기">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="gacha-modal-body">
+          <p class="gacha-modal-desc">
+            🎁 럭키박스(2코인)를 열면 아래 등급별 확률에 따라 아이템 또는 코인 환급 보상을 획득할 수 있습니다.
+          </p>
+
+          <div class="gacha-tier-list">
+            <div class="gacha-tier-card tier-legendary">
+              <div class="gacha-tier-header">
+                <span class="gacha-tier-badge legendary">🌟 전설 등급 (Legendary)</span>
+                <span class="gacha-tier-rate">10%</span>
+              </div>
+              <p class="gacha-tier-desc">럭키박스 한정 및 최상위 등급 스킨 / 액세서리</p>
+              <div class="gacha-tier-items">
+                <span class="gacha-item-chip">👑 오로라 왕관 (한정)</span>
+                <span class="gacha-item-chip">🥽 레트로 선글라스 (한정)</span>
+                <span class="gacha-item-chip">🏆 황금 골드</span>
+                <span class="gacha-item-chip">💎 사이버 네온 블루</span>
+                <span class="gacha-item-chip">🎧 네온 무지개 에어팟</span>
+                <span class="gacha-item-chip">🌌 갤럭시 라떼</span>
+                <span class="gacha-item-chip">🏋️‍♂️ 불타는 황금 아령</span>
+                <span class="gacha-item-chip">🪵 빈티지 애쉬</span>
+              </div>
+            </div>
+
+            <div class="gacha-tier-card tier-epic">
+              <div class="gacha-tier-header">
+                <span class="gacha-tier-badge epic">💜 영웅 등급 (Epic)</span>
+                <span class="gacha-tier-rate">25%</span>
+              </div>
+              <p class="gacha-tier-desc">세련되고 포인트가 되는 인기 아이템 목록</p>
+              <div class="gacha-tier-items">
+                <span class="gacha-item-chip">🟩 슈렉 그린</span>
+                <span class="gacha-item-chip">🟪 에일리언 퍼플</span>
+                <span class="gacha-item-chip">🍓 딸기 라떼</span>
+                <span class="gacha-item-chip">🔮 득근 아령 (퍼플)</span>
+                <span class="gacha-item-chip">🍏 에어팟 맥스 (그린)</span>
+                <span class="gacha-item-chip">🌲 딥 포레스트</span>
+              </div>
+            </div>
+
+            <div class="gacha-tier-card tier-rare">
+              <div class="gacha-tier-header">
+                <span class="gacha-tier-badge rare">💙 희귀 등급 (Rare)</span>
+                <span class="gacha-tier-rate">40%</span>
+              </div>
+              <p class="gacha-tier-desc">입문용 기본 액세서리 및 기본 배경</p>
+              <div class="gacha-tier-items">
+                <span class="gacha-item-chip">☕ 아이스 아메리카노 (블랙)</span>
+                <span class="gacha-item-chip">🏋️‍♀️ 득근 아령 (블랙)</span>
+                <span class="gacha-item-chip">🎧 에어팟 맥스 (실버)</span>
+                <span class="gacha-item-chip">💦 땀 밴드</span>
+                <span class="gacha-item-chip">👓 모던 안경</span>
+                <span class="gacha-item-chip">🏠 클래식 오크</span>
+              </div>
+            </div>
+
+            <div class="gacha-tier-card tier-common">
+              <div class="gacha-tier-header">
+                <span class="gacha-tier-badge common">⚪ 일반 등급 (Common)</span>
+                <span class="gacha-tier-rate">25%</span>
+              </div>
+              <p class="gacha-tier-desc">중복 및 기본 보상</p>
+              <div class="gacha-tier-items">
+                <span class="gacha-item-chip highlight">🪙 1 코인 환급 (소진 없이 재도전)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gacha-modal-footer-note">
+            <p>💡 <b>도움말 및 유의사항</b></p>
+            <ul>
+              <li>이미 소유한 아이템은 중복 지급되지 않으며, 선택된 등급의 미보유 아이템 중 1종이 우선 지급됩니다.</li>
+              <li>해당 등급의 모든 아이템을 소유한 경우 타 등급의 미보유 아이템이 지급될 수 있습니다.</li>
+              <li>획득한 아이템은 <b>[내 옷장 (OOTD)]</b> 탭에서 즉시 착용할 수 있습니다.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 7: MONTH RECORD REEL MODAL (한 달의 기록)
+         ========================================================================== -->
+    <div class="month-record-modal-overlay" id="monthRecordModal" style="display: none;">
+      <div class="month-record-card">
+        <div class="month-record-header">
+          <div class="month-record-title">
+            <i data-lucide="clapperboard" style="color: var(--accent-yellow)"></i>
+            <span>🎬 한 달의 기록 (30일 성취 하이라이트)</span>
+          </div>
+          <button class="month-record-close" id="monthRecordCloseBtn" aria-label="닫기">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="month-record-body">
+          <div class="video-screen-container">
+            <canvas id="monthRecordCanvas" class="month-record-canvas"></canvas>
+            <div class="video-overlay-info">
+              <div class="video-clip-date-row">
+                <span class="video-clip-date" id="clipDate">2026-08-11</span>
+                <span class="video-clip-badge" id="clipBadge">1.5s Boomerang</span>
+              </div>
+              <div class="video-clip-title" id="clipTitle">루틴 미션 인증 성공</div>
+            </div>
+            <div class="video-progress-bar">
+              <div class="video-progress-fill" id="videoProgressFill"></div>
+            </div>
+          </div>
+
+          <div class="video-controls-row">
+            <button class="video-control-btn" id="videoPlayPauseBtn">
+              <i data-lucide="pause" id="videoPlayIcon"></i>
+              <span id="videoPlayText">일시정지</span>
+            </button>
+            <div class="video-counter" id="videoCounterText">1 / 5 클립</div>
+            <button class="video-control-btn secondary" id="videoReplayBtn">
+              <i data-lucide="rotate-ccw"></i>
+              <span>처음부터</span>
+            </button>
+          </div>
+
+          <div class="month-record-stats-box">
+            <div class="stat-pill">
+              <span class="stat-num" id="totalClipsNum">5</span>
+              <span class="stat-label">총 인증 움짤</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-num" id="totalDurationSec">7.5초</span>
+              <span class="stat-label">하이라이트 분량</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-num" style="color: var(--primary-dark)">100%</span>
+              <span class="stat-label">갓생 실천 완수</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 8: 3D WARDROBE GACHA MODAL (3D 옷장 문 뽑기)
+         ========================================================================== -->
+    <div class="gacha-modal" id="gachaModal" aria-hidden="true">
+      <div class="gacha-container">
+        <div class="closet-gacha-wrap" id="closetGachaWrap">
+          <div class="closet-aura" id="closetAura"></div>
+          <div class="closet-wardrobe" id="closetWardrobe">
+            <div class="wardrobe-door door-left" id="doorLeft">
+              <div class="door-handle"></div>
+            </div>
+            <div class="wardrobe-door door-right" id="doorRight">
+              <div class="door-handle"></div>
+            </div>
+            <div class="wardrobe-interior" id="wardrobeInterior"></div>
+          </div>
+        </div>
+
+        <div class="gacha-light" id="gachaLight"></div>
+
+        <div class="gacha-result" id="gachaResult">
+          <div class="gacha-item-icon" id="gachaItemIcon"></div>
+          <div class="gacha-item-name" id="gachaItemName"></div>
+          <div class="gacha-item-desc" id="gachaItemDesc"></div>
+          <div class="gacha-btn-group">
+            <button class="gacha-equip-btn" id="gachaEquipBtn" style="display: none;">✨ 바로 장착하기</button>
+            <button class="gacha-close-btn" id="gachaCloseBtn">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Local Script Dependencies -->
+  <script src="Link-In-알림 기능 추가 버전/complete/store.js?v=27"></script>
+  <script src="Link-In-알림 기능 추가 버전/complete/ai.js?v=27"></script>
+  <script src="Link-In-알림 기능 추가 버전/complete/avatar.js?v=27"></script>
+  <script src="Link-In-알림 기능 추가 버전/complete/app.js?v=27"></script>
+</body>
+
+</html>

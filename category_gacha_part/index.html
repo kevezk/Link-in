@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카테고리 & 3D 옷장 뽑기 애니메이션 파트 모듈</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <h1>🛍️ 상점 & 3D 뽑기 모듈</h1>
+      <p>카테고리 탭과 3D 옷장 뽑기 애니메이션 독립 파트</p>
+    </header>
+
+    <!-- 1. 지갑 및 뽑기 버튼 영역 -->
+    <div class="wallet-bar">
+      <div class="wallet-info">
+        <span>보유 코인: </span>
+        <strong id="coinCount">10</strong> 🪙
+      </div>
+      <div class="wallet-actions">
+        <button class="btn-icon" id="probInfoBtn" title="확률 정보">❓ 확률</button>
+        <button class="btn-primary" id="luckyBoxBtn">🎲 뽑기 (2코인)</button>
+      </div>
+    </div>
+
+    <!-- 2. 카테고리 탭 (가로 스크롤 & 마우스 드래그 가능) -->
+    <div class="closet-category-tabs" id="shopCategoryTabs">
+      <button class="closet-tab active" data-category="all">전체</button>
+      <button class="closet-tab" data-category="top">스킨(상의)</button>
+      <button class="closet-tab" data-category="bottom">하의</button>
+      <button class="closet-tab" data-category="accessory">장신구</button>
+      <button class="closet-tab" data-category="background">배경</button>
+      <button class="closet-tab" data-category="title">칭호</button>
+    </div>
+
+    <!-- 3. 카테고리 필터링 아이템 그리드 예시 -->
+    <main class="items-grid" id="itemsGrid">
+      <!-- script.js에서 동적으로 생성됨 -->
+    </main>
+
+    <!-- ========================================== -->
+    <!-- 4. 3D 옷장 문 뽑기 애니메이션 모달 -->
+    <!-- ========================================== -->
+    <div class="gacha-modal" id="gachaModal" aria-hidden="true">
+      <div class="gacha-container">
+        <!-- 3D 옷장 문 컨테이너 -->
+        <div class="closet-gacha-wrap" id="closetGachaWrap">
+          <div class="closet-aura" id="closetAura"></div>
+          <div class="closet-wardrobe" id="closetWardrobe">
+            <div class="wardrobe-door door-left" id="doorLeft">
+              <div class="door-handle"></div>
+            </div>
+            <div class="wardrobe-door door-right" id="doorRight">
+              <div class="door-handle"></div>
+            </div>
+            <div class="wardrobe-interior" id="wardrobeInterior"></div>
+          </div>
+        </div>
+
+        <!-- 빛 발광 효과 -->
+        <div class="gacha-light" id="gachaLight"></div>
+
+        <!-- 뽑기 결과 카드 -->
+        <div class="gacha-result" id="gachaResult">
+          <div class="gacha-item-icon" id="gachaItemIcon"></div>
+          <div class="gacha-item-name" id="gachaItemName"></div>
+          <div class="gacha-item-desc" id="gachaItemDesc"></div>
+          <div class="gacha-btn-group">
+            <button class="gacha-equip-btn" id="gachaEquipBtn" style="display: none;">✨ 바로 장착하기</button>
+            <button class="gacha-close-btn" id="gachaCloseBtn">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 5. 확률 안내 모달 -->
+    <!-- ========================================== -->
+    <div class="prob-modal" id="probModal" aria-hidden="true">
+      <div class="prob-dialog">
+        <button class="prob-close-btn" id="probCloseBtn">×</button>
+        <h2>🎲 뽑기 확률 안내</h2>
+        <div class="prob-table-container">
+          <table class="prob-table">
+            <thead>
+              <tr>
+                <th>아이템 등급</th>
+                <th style="text-align: right;">획득 확률</th>
+              </tr>
+            </thead>
+            <tbody id="probTableBody">
+              <!-- script.js에서 생성됨 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
