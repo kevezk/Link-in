@@ -873,3 +873,79 @@ body.theme-dark #tab-classroom {
   content: '🔒';
   font-size: 0.75rem;
 }
+
+/* ============================================================
+   MOBILE SCROLLING FIX & CLASS SERVER WHITE FONT RULE
+   ============================================================ */
+
+/* 1. Class Server White Font Rule */
+#tab-classroom,
+#tab-classroom *,
+.login-card,
+.login-card *,
+.notice-card,
+.notice-card *,
+.settings-card,
+.settings-card * {
+  color: #FFFFFF !important;
+}
+
+#tab-classroom input[type="text"],
+#tab-classroom input[type="password"],
+#tab-classroom select,
+.login-form input,
+.login-form select {
+  color: #FFFFFF !important;
+  background-color: rgba(18, 26, 43, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+#tab-classroom .text-muted,
+.role-security-note,
+.settings-desc,
+.notice-time {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* 2. Mobile Touch Scroll Fix */
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100dvh;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .phone-container {
+    height: auto !important;
+    min-height: 100dvh;
+    overflow: visible !important;
+  }
+
+  .app-screen {
+    height: auto !important;
+    min-height: calc(100dvh - 44px);
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 100px !important;
+  }
+
+  .tab-content {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    max-height: none !important;
+    padding-bottom: 100px !important;
+  }
+
+  #tab-today, #tab-history, #tab-shop, #tab-classroom {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-card, .gacha-modal-card, .month-record-card {
+    max-height: 88vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
