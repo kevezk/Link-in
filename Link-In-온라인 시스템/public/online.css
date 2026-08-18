@@ -1090,6 +1090,61 @@ body.theme-dark #tab-classroom,
   .date-navigator {
     padding: 8px 10px !important;
   }
+
+  /* Mobile Login Modal Form Row Responsiveness (학교/학년/반 선택 100% 모바일 가로 정렬) */
+  .login-card {
+    padding: 0 !important;
+    max-width: 92vw !important;
+    width: 92vw !important;
+    margin: 0 auto !important;
+  }
+
+  .modal-header-graphic {
+    padding: 16px 16px 12px !important;
+  }
+
+  .login-form {
+    padding: 16px 14px 20px !important;
+    gap: 12px !important;
+  }
+
+  .form-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .form-group {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  .form-group label {
+    font-size: 0.82rem !important;
+  }
+
+  .modal-overlay input[type="text"],
+  .modal-overlay input[type="password"],
+  .modal-overlay select {
+    width: 100% !important;
+    padding: 10px 12px !important;
+    font-size: 0.9rem !important;
+    box-sizing: border-box !important;
+  }
+
+  .character-choice-grid {
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .character-choice {
+    padding: 6px 4px !important;
+  }
+
+  .character-choice img {
+    width: 44px !important;
+    height: 44px !important;
+  }
 }
+
 
 
