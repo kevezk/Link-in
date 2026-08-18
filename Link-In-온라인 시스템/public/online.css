@@ -41,15 +41,18 @@
 }
 
 #tab-classroom.theme-dark,
-body.theme-dark #tab-classroom {
+body.theme-dark #tab-classroom,
+#tab-classroom {
   background-color: var(--bg-dark);
   background-image: 
     radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
     radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
   color: var(--text-main);
   min-height: 100vh;
-  overflow: hidden;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
 }
+
 
 .hidden {
   display: none !important;
@@ -939,8 +942,21 @@ body.theme-dark #tab-classroom {
 
   #tab-today, #tab-history, #tab-shop, #tab-classroom {
     overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch !important;
   }
+
+  #tab-classroom,
+  #tab-classroom .app-container,
+  #tab-classroom .main-content,
+  #tab-classroom .ypt-server-wrapper,
+  #tab-classroom .live-classroom-grid {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-height: none !important;
+    height: auto !important;
+    padding-bottom: 120px !important;
+  }
+
 
   .modal-card, .gacha-modal-card, .month-record-card {
     max-height: 88vh !important;
