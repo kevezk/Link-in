@@ -965,3 +965,131 @@ body.theme-dark #tab-classroom,
   }
 }
 
+/* ============================================================
+   MOBILE RESPONSIVE EDGE & CROP FIX (모바일 화면 양옆 잘림 방지)
+   ============================================================ */
+@media (max-width: 768px) {
+  html, body {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .phone-container {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .main-content {
+    padding: 10px 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .ypt-server-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 2px !important;
+    box-sizing: border-box !important;
+  }
+
+  .top-header {
+    padding: 8px 10px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    height: auto !important;
+  }
+
+  .header-left, .header-right {
+    gap: 6px !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+
+  .class-room-badge {
+    font-size: 0.75rem !important;
+    padding: 4px 8px !important;
+    max-width: 150px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .user-profile-pill {
+    padding: 2px 8px !important;
+  }
+
+  .user-name {
+    font-size: 0.8rem !important;
+    max-width: 75px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .ypt-server-banner {
+    padding: 12px 14px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .ypt-character-grid {
+    grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .ypt-user-card {
+    padding: 10px 6px !important;
+  }
+
+  .ypt-character-space {
+    width: 72px !important;
+    height: 72px !important;
+  }
+
+  .ypt-character-sprite {
+    width: 60px !important;
+    height: 60px !important;
+  }
+
+  .live-classroom-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-top: 12px !important;
+  }
+
+  .pixel-panel, .video-panel {
+    padding: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  #pixelClassroomCanvas {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+  }
+
+  .history-card, .avatar-card-wrapper, .shop-wallet, .routine-list {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .date-navigator {
+    padding: 8px 10px !important;
+  }
+}
+
+
